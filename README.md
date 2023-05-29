@@ -1,2 +1,3 @@
 # app-explorer-movies-api
-backend for movie app
+
+Backend for movie-app
