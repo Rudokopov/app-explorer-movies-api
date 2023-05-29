@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import { linkValidate } from "../utils/linkValidate"
+import { linkValidate } from "../utils/linkValidate.js"
 
 const movieSchema = new mongoose.Schema({
   country: {

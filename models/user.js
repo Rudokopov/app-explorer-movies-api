@@ -27,4 +27,4 @@ const userSchema = new mongoose.Schema({
   },
 })
 
-export default mongoose.model("user", movieSchema)
+export default mongoose.model("user", userSchema)

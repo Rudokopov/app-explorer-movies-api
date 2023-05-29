@@ -5,6 +5,7 @@ import { router } from "./routes/index.js"
 import celebrate from "celebrate"
 import { PORT, DATA_BASE } from "./config.js"
 import { requestLogger, errorLogger } from "./middlewares/logger.js"
+import { handleErrors } from "./middlewares/validate.js"
 
 dotenv.config()
 

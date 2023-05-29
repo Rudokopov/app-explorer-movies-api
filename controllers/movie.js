@@ -1,22 +1,22 @@
-import { NotFound } from "../customErrors/customErrors.js";
-import Movie from "../models/movie.js";
+import { NotFound } from "../customErrors/customErrors.js"
+import Movie from "../models/movie.js"
 
 export const getUserMovies = async (req, res, next) => {
   try {
-    const userId = req.userId;
-    const movies = await Movie.findById(userId);
+    const userId = req.userId
+    const movies = await Movie.findById(userId)
     if (!movies) {
-      throw new NotFound("Фильмы не найдены");
+      throw new NotFound("Фильмы не найдены")
     }
-    res.send(201, movies);
+    res.send(201, movies)
   } catch (err) {
-    next(err);
+    next(err)
   }
-};
+}
 
 export const createNewMovie = async (req, res, next) => {
   try {
-    const userId = req.userId;
+    const userId = req.userId
     const movieParams = ({
       country,
       director,
@@ -29,28 +29,28 @@ export const createNewMovie = async (req, res, next) => {
       nameEN,
       thumbnail,
       movieId,
-    } = req.body);
-    const movie = await Movie.create(movieParams, { owner: userId });
+    } = req.body)
+    const movie = await Movie.create(movieParams, { owner: userId })
   } catch (err) {
-    next(err);
+    next(err)
   }
-};
+}
 
 export const deleteMovieById = async (req, res, next) => {
   try {
-    const userId = req.userId;
-    const movieId = req.params.id;
+    const userId = req.userId
+    const movieId = req.params.id
 
-    const movie = await Movie.findById(movieId).populate(["owner"]);
+    const movie = await Movie.findById(movieId).populate(["owner"])
     if (!movie) {
-      throw new NotFound("Фильм с таким id не найден");
+      throw new NotFound("Фильм с таким id не найден")
     }
     if (!Movie.owner.id === userId) {
-      throw new AccessError("У вас недостаточно прав на удаление фильма");
+      throw new AccessError("У вас недостаточно прав на удаление фильма")
     }
-    await Movie.deleteOne({ _id: movieId });
-    res.send(movie);
+    await Movie.deleteOne({ _id: movieId })
+    res.send(movie)
   } catch (err) {
-    next(err);
+    next(err)
   }
-};
+}
