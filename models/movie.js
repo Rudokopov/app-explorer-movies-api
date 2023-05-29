@@ -51,6 +51,11 @@ const movieSchema = new mongoose.Schema({
     ref: "user",
     required: true,
   },
+  favorites: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "user",
+    default: [],
+  },
   movieId: {
     type: Number, // id фильма, который содержится в ответе сервиса MoviesExplorer.
     required: true,

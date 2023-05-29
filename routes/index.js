@@ -24,6 +24,8 @@ import {
   getUserMovies,
   createNewMovie,
   deleteMovieById,
+  addToFavoriteMovie,
+  removeFromFavoriteMovie,
 } from "../controllers/movie.js"
 
 // routes for user
@@ -36,6 +38,18 @@ router.patch("/users/me", checkAuth, validateProfile, updateUser)
 router.get("/movies", checkAuth, getUserMovies)
 router.post("/movies", checkAuth, validateCreateMovie, createNewMovie)
 router.delete("/movies/:id", checkAuth, validateMovieId, deleteMovieById)
+router.put(
+  "/movies/favorite/:id",
+  checkAuth,
+  validateMovieId,
+  addToFavoriteMovie
+)
+router.delete(
+  "/movies/favorite/:id",
+  checkAuth,
+  validateMovieId,
+  removeFromFavoriteMovie
+)
 
 router.all("*", (req, res, next) => {
   next(new NotFound("Такого адреса не существует"))

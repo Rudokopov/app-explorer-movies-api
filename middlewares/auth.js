@@ -8,7 +8,7 @@ const checkAuth = async (req, res, next) => {
   }
   const token = t.replace(/Bearer\s/, "")
   try {
-    const decoded = jwt.verify(token, "secret-key-word")
+    const decoded = jwt.verify(token, "monkey-is-not-bear")
     req.userId = decoded._id
     next()
   } catch (err) {
