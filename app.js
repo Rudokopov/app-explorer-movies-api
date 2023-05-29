@@ -18,6 +18,7 @@ app.use(requestLogger)
 app.use(router)
 app.use(errorLogger)
 app.use(celebrate.errors())
+app.use(handleErrors)
 
 app.listen(PORT, () => {
   console.log("Ссылка на сервер")
