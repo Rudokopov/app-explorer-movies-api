@@ -5,7 +5,12 @@ import { NotFound } from "../customErrors/customErrors.js";
 const router = express.Router();
 
 // import routes for user
-import { getUserMe, updateUser } from "../controllers/user.js";
+import {
+  getUserMe,
+  updateUser,
+  createUser,
+  login,
+} from "../controllers/user.js";
 
 // import routes for movies
 import {
@@ -15,6 +20,8 @@ import {
 } from "../controllers/movie.js";
 
 // routes for user
+router.post("/signin", login);
+router.post("/signup", createUser);
 router.get("/users/me", checkAuth, getUserMe);
 router.patch("/users/me", checkAuth, updateUser);
 
@@ -22,3 +29,9 @@ router.patch("/users/me", checkAuth, updateUser);
 router.get("/movies", checkAuth, getUserMovies);
 router.post("/movies", checkAuth, createNewMovie);
 router.delete("/movies/:id", checkAuth, deleteMovieById);
+
+router.all("*", (req, res, next) => {
+  next(new NotFound("Такого адреса не существует"));
+});
+
+export { router };

@@ -3,7 +3,7 @@ logs
 *.log
 npm-debug.log*
 .env
-
+config
 # Dependency directory
 node_modules
 
