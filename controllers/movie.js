@@ -4,20 +4,13 @@ import mongoose from "mongoose"
 
 export const getUserMovies = async (req, res, next) => {
   try {
-    const currentMovies = []
     const userId = req.userId
     console.log(userId)
     const movies = await Movie.find({})
-    movies.map((item, i) => {
-      if (item.favorites.includes(userId)) {
-        currentMovies.push(item)
-      }
-      return currentMovies
-    })
-    if (!movies) {
-      throw new NotFound("Фильмы не найдены")
-    }
-    res.send(201, currentMovies)
+    const currentMovies = movies.filter((item) =>
+      item.favorites.includes(userId)
+    )
+    res.send(currentMovies)
   } catch (err) {
     next(err)
   }
@@ -27,7 +20,7 @@ export const createNewMovie = async (req, res, next) => {
   try {
     const userId = req.userId
     const movie = await Movie.create({ ...req.body, owner: userId })
-    res.status(201).send(movie)
+    res.send(201, movie)
   } catch (err) {
     next(err)
   }
@@ -37,7 +30,6 @@ export const deleteMovieById = async (req, res, next) => {
   try {
     const userId = req.userId
     const movieId = req.params.id
-
     const movie = await Movie.findById(movieId).populate(["owner"])
     if (!movie) {
       throw new NotFound("Фильм с таким id не найден")
@@ -45,7 +37,7 @@ export const deleteMovieById = async (req, res, next) => {
     if (!Movie.owner.id === userId) {
       throw new AccessError("У вас недостаточно прав на удаление фильма")
     }
-    await Movie.deleteOne({ _id: movieId })
+    await movie.deleteOne()
     res.send(movie)
   } catch (err) {
     next(err)

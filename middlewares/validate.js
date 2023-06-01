@@ -1,7 +1,5 @@
 import { Joi, celebrate } from "celebrate"
-
-const checkLink =
-  /^((ftp|http|https):\/\/)?(www\.)?([A-Za-zА-Яа-я0-9]{1}[A-Za-zА-Яа-я0-9\-]*\.?)*\.{1}[A-Za-zА-Яа-я0-9-]{2,8}(\/([\w#!:.?+=&%@!\-\/])*)?/
+import { linkValidate } from "../utils/linkValidate"
 
 const handleErrors = (err, req, res, next) => {
   const { statusCode = 500 } = err
@@ -36,11 +34,11 @@ const validateCreateMovie = celebrate({
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().required().pattern(checkLink),
-    trailerLink: Joi.string().required().pattern(checkLink),
+    image: Joi.string().required().pattern(linkValidate),
+    trailerLink: Joi.string().required().pattern(linkValidate),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
-    thumbnail: Joi.string().required().pattern(checkLink),
+    thumbnail: Joi.string().required().pattern(linkValidate),
     movieId: Joi.number().required(),
   }),
 })

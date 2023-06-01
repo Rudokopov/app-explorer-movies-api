@@ -1,7 +1,7 @@
-class NotFound extends Error {
+class NotFoundError extends Error {
   constructor(message) {
     super(message)
-    this.name = "NotFound"
+    this.name = "NotFoundError"
     this.statusCode = 404
   }
 }
@@ -9,7 +9,7 @@ class NotFound extends Error {
 class BadRequestError extends Error {
   constructor(message) {
     super(message)
-    this.name = "CastError"
+    this.name = "BadRequestError"
     this.statusCode = 400
   }
 }
@@ -17,25 +17,31 @@ class BadRequestError extends Error {
 class AccessError extends Error {
   constructor(message) {
     super(message)
-    this.name = "AcessError"
+    this.name = "AccessError"
     this.statusCode = 403
   }
 }
 
-class ReferenceError extends Error {
+class UnauthorizedError extends Error {
   constructor(message) {
     super(message)
-    this.name = "ReferenceError"
+    this.name = "UnauthorizedError"
     this.statusCode = 401
   }
 }
 
-class UniqueError extends Error {
+class ConflictError extends Error {
   constructor(message) {
     super(message)
-    this.name = "UniqueError"
+    this.name = "ConflictError"
     this.statusCode = 409
   }
 }
 
-export { NotFound, BadRequestError, AccessError, UniqueError, ReferenceError }
+export {
+  NotFoundError,
+  BadRequestError,
+  AccessError,
+  UnauthorizedError,
+  ConflictError,
+}

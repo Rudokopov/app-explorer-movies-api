@@ -2,7 +2,11 @@ import User from "../models/user.js"
 import mongoose from "mongoose"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import { BadRequestError, NotFound } from "../customErrors/customErrors.js"
+import {
+  BadRequestError,
+  ConflictError,
+  UnauthorizedError,
+} from "../customErrors/customErrors.js"
 
 export const createUser = async (req, res, next) => {
   try {
@@ -20,7 +24,7 @@ export const createUser = async (req, res, next) => {
       return
     }
     if (err.code === 11000) {
-      next(new UniqueError("Такой email уже зарегестрирован"))
+      next(new ConflictError("Такой email уже зарегестрирован"))
       return
     }
     next(err)
@@ -31,13 +35,12 @@ export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body
     const user = await User.findOne({ email }).select("+passwordHash")
-    console.log(req.body)
     if (!user) {
-      throw new NotFound("Пользователь с таким email не найден")
+      throw new UnauthorizedError("Пользователь с таким email не найден")
     }
     const isValid = await bcrypt.compare(password, user._doc.passwordHash)
     if (!isValid) {
-      throw new ValidationError("Email или Password введены неверно")
+      throw new UnauthorizedError("Email или Password введены неверно")
     }
     const { NODE_ENV, JWT_SECRET } = process.env
     const token = jwt.sign(
@@ -66,7 +69,7 @@ export const getUserMe = async (req, res, next) => {
   try {
     const userId = req.userId
     const currentUser = await User.findById(userId)
-    res.send(201, currentUser)
+    res.send(currentUser)
   } catch (err) {
     next(err)
   }
@@ -77,7 +80,11 @@ export const updateUser = async (req, res, next) => {
     const userId = req.userId
     const { name, email } = req.body
     const currentUser = await User.findByIdAndUpdate(userId, { name, email })
-    res.send(201, currentUser)
+    if (!currentUser) {
+      next(new BadRequestError("Переданы некорректные данные"))
+      return
+    }
+    res.send(currentUser)
   } catch (err) {
     next(err)
   }
