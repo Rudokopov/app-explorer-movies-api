@@ -84,6 +84,10 @@ export const updateUser = async (req, res, next) => {
       next(new BadRequestError("Переданы некорректные данные"))
       return
     }
+    if (err.code === 11000) {
+      next(new ConflictError("Такой email уже зарегестрирован"))
+      return
+    }
     res.send(currentUser)
   } catch (err) {
     next(err)
