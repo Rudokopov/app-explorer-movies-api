@@ -1,4 +1,4 @@
-import { NotFound } from "../customErrors/customErrors.js"
+import { NotFoundError } from "../customErrors/customErrors.js"
 import Movie from "../models/movie.js"
 import mongoose from "mongoose"
 
@@ -32,7 +32,7 @@ export const deleteMovieById = async (req, res, next) => {
     const movieId = req.params.id
     const movie = await Movie.findById(movieId).populate(["owner"])
     if (!movie) {
-      throw new NotFound("Фильм с таким id не найден")
+      throw new NotFoundError("Фильм с таким id не найден")
     }
     if (!Movie.owner.id === userId) {
       throw new AccessError("У вас недостаточно прав на удаление фильма")
@@ -54,7 +54,7 @@ export const addToFavoriteMovie = async (req, res, next) => {
       { new: true }
     )
     if (!response) {
-      throw new NotFound("Фильм с похожим ID не найдена")
+      throw new NotFoundError("Фильм с похожим ID не найдена")
     }
     res.send(response)
   } catch (err) {
@@ -76,7 +76,7 @@ export const removeFromFavoriteMovie = async (req, res, next) => {
       { new: true }
     )
     if (!response) {
-      throw new NotFound("Фильм с похожим ID не найдена")
+      throw new NotFoundError("Фильм с похожим ID не найдена")
     }
     res.send(response)
   } catch (err) {

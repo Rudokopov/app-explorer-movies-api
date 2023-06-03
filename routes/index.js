@@ -1,6 +1,6 @@
 import express from "express"
 import { checkAuth } from "../middlewares/auth.js"
-import { NotFound } from "../customErrors/customErrors.js"
+import { NotFoundError } from "../customErrors/customErrors.js"
 import {
   validateRegister,
   validateLogin,
@@ -52,7 +52,7 @@ router.delete(
 )
 
 router.all("*", (req, res, next) => {
-  next(new NotFound("Такого адреса не существует"))
+  next(new NotFoundError("Такого адреса не существует"))
 })
 
 export { router }

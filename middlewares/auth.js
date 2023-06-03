@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken"
-import { ReferenceError } from "../customErrors/customErrors.js"
+import { UnauthorizedError } from "../customErrors/customErrors.js"
 
 const checkAuth = async (req, res, next) => {
   const jwtToken = req.headers.authorization
   if (!jwtToken) {
-    return next(new ReferenceError("У вас нет доступа"))
+    return next(new UnauthorizedError("У вас нет доступа"))
   }
   const token = jwtToken.replace(/Bearer\s/, "")
   try {
@@ -12,7 +12,7 @@ const checkAuth = async (req, res, next) => {
     req.userId = decoded._id
     next()
   } catch (err) {
-    next(new ReferenceError("У вас нет доступа"))
+    next(new UnauthorizedError("У вас нет доступа"))
     return
   }
 }

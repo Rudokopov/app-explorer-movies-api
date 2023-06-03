@@ -1,5 +1,5 @@
 import { Joi, celebrate } from "celebrate"
-import { linkValidate } from "../utils/linkValidate"
+import { checkLink } from "../utils/linkValidate.js"
 
 const handleErrors = (err, req, res, next) => {
   let statusCode = err.statusCode || 500
@@ -34,11 +34,11 @@ const validateCreateMovie = celebrate({
     duration: Joi.number().required(),
     year: Joi.string().required(),
     description: Joi.string().required(),
-    image: Joi.string().required().pattern(linkValidate),
-    trailerLink: Joi.string().required().pattern(linkValidate),
+    image: Joi.string().required().pattern(checkLink),
+    trailerLink: Joi.string().required().pattern(checkLink),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
-    thumbnail: Joi.string().required().pattern(linkValidate),
+    thumbnail: Joi.string().required().pattern(checkLink),
     movieId: Joi.number().required(),
   }),
 })
