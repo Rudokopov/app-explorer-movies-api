@@ -20,7 +20,7 @@ export const createNewMovie = async (req, res, next) => {
   try {
     const userId = req.userId
     const movie = await Movie.create({ ...req.body, owner: userId })
-    res.send(201, movie)
+    res.status(201).send(movie)
   } catch (err) {
     next(err)
   }

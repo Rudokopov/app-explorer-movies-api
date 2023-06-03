@@ -17,7 +17,7 @@ export const createUser = async (req, res, next) => {
 
     const result = newUser.toObject()
     delete result.passwordHash
-    res.send(201, result)
+    res.status(201).send(result)
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
       next(new BadRequestError("Переданы некорректные данные"))
@@ -62,6 +62,7 @@ export const login = async (req, res, next) => {
       next(new BadRequestError("Переданы некорректные данные"))
       return
     }
+    next(err)
   }
 }
 
@@ -81,15 +82,14 @@ export const updateUser = async (req, res, next) => {
     const { name, email } = req.body
     const currentUser = await User.findByIdAndUpdate(userId, { name, email })
     if (!currentUser) {
-      next(new BadRequestError("Переданы некорректные данные"))
-      return
+      throw new BadRequestError("Переданы некорректные данные")
     }
+    res.send(currentUser)
+  } catch (err) {
     if (err.code === 11000) {
       next(new ConflictError("Такой email уже зарегестрирован"))
       return
     }
-    res.send(currentUser)
-  } catch (err) {
     next(err)
   }
 }

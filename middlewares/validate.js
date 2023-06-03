@@ -2,14 +2,14 @@ import { Joi, celebrate } from "celebrate"
 import { linkValidate } from "../utils/linkValidate"
 
 const handleErrors = (err, req, res, next) => {
-  const { statusCode = 500 } = err
-  let { message } = err
+  let statusCode = err.statusCode || 500
+  let message = err.message
 
   if (statusCode === 500) {
     message = "Внутренняя ошибка сервера"
   }
 
-  res.send(statusCode, { message })
+  res.status(statusCode).send({ error: message })
 }
 
 const validateRegister = celebrate({

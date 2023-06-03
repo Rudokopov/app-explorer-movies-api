@@ -1,5 +1,6 @@
 import express from "express"
 import mongoose from "mongoose"
+import { limiter } from "./utils/rateLimiter.js"
 import dotenv from "dotenv"
 import { router } from "./routes/index.js"
 import celebrate from "celebrate"
@@ -10,6 +11,7 @@ import { handleErrors } from "./middlewares/validate.js"
 dotenv.config()
 
 const app = express()
+app.use(limiter)
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
