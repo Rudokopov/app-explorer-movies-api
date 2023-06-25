@@ -80,14 +80,21 @@ export const updateUser = async (req, res, next) => {
   try {
     const userId = req.userId
     const { name, email } = req.body
-    const currentUser = await User.findByIdAndUpdate(userId, { name, email })
-    if (!currentUser) {
+
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: userId },
+      { name, email },
+      { new: true }
+    )
+
+    if (!updatedUser) {
       throw new BadRequestError("Переданы некорректные данные")
     }
-    res.send(currentUser)
+
+    res.send(updatedUser)
   } catch (err) {
     if (err.code === 11000) {
-      next(new ConflictError("Такой email уже зарегестрирован"))
+      next(new ConflictError("Такой email уже зарегистрирован"))
       return
     }
     next(err)

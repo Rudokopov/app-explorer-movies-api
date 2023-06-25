@@ -37,19 +37,9 @@ router.patch("/users/me", checkAuth, validateProfile, updateUser)
 // routes for movies
 router.get("/movies", checkAuth, getUserMovies)
 router.post("/movies", checkAuth, validateCreateMovie, createNewMovie)
-router.delete("/movies/:id", checkAuth, validateMovieId, deleteMovieById)
-router.put(
-  "/movies/favorite/:id",
-  checkAuth,
-  validateMovieId,
-  addToFavoriteMovie
-)
-router.delete(
-  "/movies/favorite/:id",
-  checkAuth,
-  validateMovieId,
-  removeFromFavoriteMovie
-)
+router.delete("/movies", checkAuth, deleteMovieById)
+router.put("/movies/favorite/:id", checkAuth, addToFavoriteMovie)
+router.delete("/movies/favorite/:id", checkAuth, removeFromFavoriteMovie)
 
 router.all("*", (req, res, next) => {
   next(new NotFoundError("Такого адреса не существует"))

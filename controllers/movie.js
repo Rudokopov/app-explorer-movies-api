@@ -6,11 +6,8 @@ export const getUserMovies = async (req, res, next) => {
   try {
     const userId = req.userId
     console.log(userId)
-    const movies = await Movie.find({})
-    const currentMovies = movies.filter((item) =>
-      item.favorites.includes(userId)
-    )
-    res.send(currentMovies)
+    const movies = await Movie.find({ owner: userId })
+    res.send(movies)
   } catch (err) {
     next(err)
   }
@@ -29,16 +26,17 @@ export const createNewMovie = async (req, res, next) => {
 export const deleteMovieById = async (req, res, next) => {
   try {
     const userId = req.userId
-    const movieId = req.params.id
-    const movie = await Movie.findById(movieId).populate(["owner"])
-    if (!movie) {
-      throw new NotFoundError("Фильм с таким id не найден")
-    }
-    if (!Movie.owner.id === userId) {
-      throw new AccessError("У вас недостаточно прав на удаление фильма")
-    }
-    await movie.deleteOne()
-    res.send(movie)
+    const movieId = req.body.movieId
+
+    await Movie.findOneAndDelete({
+      movieId: movieId,
+      owner: userId,
+    })
+
+    // Получите обновленный список фильмов после удаления
+    const updatedMovies = await Movie.find({ owner: userId })
+
+    res.send(updatedMovies)
   } catch (err) {
     next(err)
   }
