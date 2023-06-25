@@ -2,6 +2,7 @@
 const allowedCors = [
   "https://app-explorer-movies-frontend.vercel.app",
   "https://app-explorer-movies-frontend-aqik5slkg-rudokopov.vercel.app",
+  "https://app-explorer-movies-frontend-git-level-3-rudokopov.vercel.app",
   "http://localhost:3000",
   "http://localhost:3001",
   "http://localhost:3002",
