@@ -7,6 +7,7 @@ import {
   ConflictError,
   UnauthorizedError,
 } from "../customErrors/customErrors.js"
+import { generateToken } from "../utils/utils.js"
 
 export const createUser = async (req, res, next) => {
   try {
@@ -15,9 +16,12 @@ export const createUser = async (req, res, next) => {
     const hash = await bcrypt.hash(password, salt)
     const newUser = await User.create({ name, email, passwordHash: hash })
 
+    const token = generateToken(newUser)
+
     const result = newUser.toObject()
     delete result.passwordHash
-    res.status(201).send(result)
+
+    res.status(201).send({ ...result, token })
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
       next(new BadRequestError("Переданы некорректные данные"))
@@ -43,15 +47,16 @@ export const login = async (req, res, next) => {
       throw new UnauthorizedError("Email или Password введены неверно")
     }
     const { NODE_ENV, JWT_SECRET } = process.env
-    const token = jwt.sign(
-      {
-        _id: user._id,
-      },
-      NODE_ENV === "production" ? JWT_SECRET : "monkey-is-not-bear",
-      {
-        expiresIn: "7d",
-      }
-    )
+    const token = generateToken(user)
+    // const token = jwt.sign(
+    //   {
+    //     _id: user._id,
+    //   },
+    //   NODE_ENV === "production" ? JWT_SECRET : "monkey-is-not-bear",
+    //   {
+    //     expiresIn: "7d",
+    //   }
+    // )
     const { passwordHash, ...userData } = user._doc
     res.send({
       ...userData,
